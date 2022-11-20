@@ -1,0 +1,29 @@
+git clone https://github.com/big-data-europe/docker-hadoop-spark-workbench.git - склонировал проект
+cd docker-hadoop-spark-workbench/ - перешел в директорию с docker-compose
+docker-compose up -d - запустил docker-compose
+
+docker ps - просмотрел запущенные контейнеры, чтобы найти id датаноды
+
+Скопировал 4 тома на датаноду
+docker cp C:/Users/lpyryanov/Desktop/DE/vim1.txt 96165b22bdb8:/
+docker cp C:/Users/lpyryanov/Desktop/DE/vim2.txt 96165b22bdb8:/
+docker cp C:/Users/lpyryanov/Desktop/DE/vim3.txt 96165b22bdb8:/
+docker cp C:/Users/lpyryanov/Desktop/DE/vim4.txt 96165b22bdb8:/
+
+docker exec -it 96165b22bdb8 bash - подрубился к датаноде
+
+hdfs dfs -ls /user/test/ - проверил содержимое своей папки на HDFS
+
+hdfs dfs -getmerge -nl /user/test/ /result.txt или
+hdfs dfs -cat /user/test/vim1.txt /user/test/vim2.txt /user/test/vim3.txt /user/test/vim4.txt > /vim.txt
+- объединил в один файл (попробовал оба варианта)
+
+hdfs dfs -copyFromLocal vim.txt /user/test - скопировал полученный файл из HDFS
+
+hdfs dfs -chmod 733 /user/test/vim.txt - поменял права у файла ( 1 - чтение, 2 - запись, 4 запуск, 1+2+4 - все права)
+
+hdfs dfs -du -h /user/test/vim.txt - вывод размера файла в мегабайтах
+
+hdfs dfs -setrep -w 2 /user/test/vim.txt - поменял фактор репликации на 2
+
+hdfs dfs -cat /user/test/vim.txt | wc -l - подсчитал количество строк в файле (10276)
